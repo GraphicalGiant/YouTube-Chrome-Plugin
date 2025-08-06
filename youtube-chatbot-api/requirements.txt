@@ -1,6 +1,9 @@
 # Youtube transcripta api
 youtube-transcript-api
 
+transformers
+sentence-transformers
+
 # Langchain RAG
 langchain-groq
 langchain-openai
@@ -13,4 +16,3 @@ tiktoken
 python-dotenv
 flask
 flask-cors
-sentence-transformers
