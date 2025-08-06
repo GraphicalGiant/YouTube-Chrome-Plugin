@@ -1,0 +1,14 @@
+# Youtube transcripta api
+youtube-transcript-api
+
+# Langchain RAG
+langchain-groq
+langchain-openai
+langchain-community
+langchain-core
+langchain-huggingface
+
+faiss-cpu
+tiktoken
+python-dotenv
+flask
