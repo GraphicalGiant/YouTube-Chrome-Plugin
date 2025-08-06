@@ -5,18 +5,15 @@ from flask_cors import CORS
 
 
 
+
 app = Flask(__name__)
 CORS(app)
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    data = request.get_json()
-    video_id = data.get("video_id", None)
-    question = data.get("question", "")
-
-     # Example: just respond with a dummy answer
-    if not question:
-        return jsonify({"error": "Missing question"}), 400
+    data = request.json
+    video_id = data["video_id"]
+    question = data["question"]
 
     # Your RAG pipeline uses the video_id to fetch transcript and respond
     answer = generate_answer(video_id, question)
