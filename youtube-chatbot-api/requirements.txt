@@ -12,3 +12,4 @@ faiss-cpu
 tiktoken
 python-dotenv
 flask
+flask-cors
