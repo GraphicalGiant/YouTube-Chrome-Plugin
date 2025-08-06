@@ -1,5 +1,7 @@
 
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
@@ -15,7 +17,6 @@ from langchain_core.output_parsers import StrOutputParser
 
 # Load Groq API key
 groq_api_key = os.getenv("GROQ_API_KEY")
-
 if not groq_api_key:
     raise ValueError("GROQ_API_KEY not found in environment variables.")
 
