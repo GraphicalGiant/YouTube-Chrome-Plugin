@@ -1,7 +1,5 @@
 
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
@@ -58,6 +56,7 @@ def generate_answer(video_id, question):
     """Step 3 Augmentation"""
 
     llm = ChatGroq(
+    api_key=groq_api_key,
     model_name = "llama-3.3-70b-versatile",
     temperature = 0.2
     )
