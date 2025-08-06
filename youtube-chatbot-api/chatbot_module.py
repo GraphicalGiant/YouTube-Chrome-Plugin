@@ -7,13 +7,40 @@ load_dotenv()
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_groq import ChatGroq
-from langchain_openai import OpenAIEmbeddings
+#from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain_core.prompts import PromptTemplate
-from langchain.embeddings import HuggingFaceEmbeddings
+#from langchain.embeddings import HuggingFaceEmbeddings
 
 from langchain_core.runnables import RunnablePassthrough, RunnableParallel, RunnableLambda
 from langchain_core.output_parsers import StrOutputParser
+
+from transformers import AutoTokenizer, AutoModel
+import torch
+from langchain_core.embeddings import Embeddings
+
+class MiniLMembeddings(Embeddings):
+    def __init__(self, model_name="sentence-transformers/all-MiniLM-L6-v2"):
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model = AutoModel.from_pretrained(model_name)
+
+    def embed_documents(self, texts):
+        return [self._embed(text) for text in texts]
+    
+    def embed_query(self, text):
+        return self._embed(text)
+    
+    def _embed(self, text):
+        inputs = self.tokenizer(text, return_tensors="pt", trauncation=True, padding=True)
+        with torch.no_grad():
+            outputs = self.model(**inputs)
+        embeddings = outputs.last_hidden_state
+        attention_mask = inputs['attention_mask'].unsqueeze(-1)
+        masked_embeddings = embeddings*attention_mask
+        summed = masked_embeddings.sum(1)
+        counts = attention_mask.sum(1)
+        mean_pooled = summed/ counts
+        return mean_pooled.squeeze().tolist()
 
 # Load Groq API key
 groq_api_key = os.getenv("GROQ_API_KEY")
@@ -44,7 +71,7 @@ def generate_answer(video_id, question):
 
     """Step 1c & 1d - Indexing (Embedding Generation and Storing in Vector Space)"""
 
-    embedder = HuggingFaceEmbeddings(model_name = "all-MiniLM-L6-v2")
+    embedder = MiniLMembeddings()
 
     vector_store = FAISS.from_documents(chunks, embedder)
 
@@ -58,7 +85,7 @@ def generate_answer(video_id, question):
 
     llm = ChatGroq(
     api_key=groq_api_key,
-    model_name = "llama-3.3-70b-versatile",
+    model_name = "llama-3.1-8b-instant",
     temperature = 0.2
     )
 

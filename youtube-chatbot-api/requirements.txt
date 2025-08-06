@@ -2,7 +2,7 @@
 youtube-transcript-api
 
 transformers
-sentence-transformers
+torch
 
 # Langchain RAG
 langchain-groq
