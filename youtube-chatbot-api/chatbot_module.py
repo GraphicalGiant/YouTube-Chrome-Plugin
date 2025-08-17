@@ -31,7 +31,7 @@ class MiniLMembeddings(Embeddings):
         return self._embed(text)
     
     def _embed(self, text):
-        inputs = self.tokenizer(text, return_tensors="pt", trauncation=True, padding=True)
+        inputs = self.tokenizer(text, return_tensors="pt", truncation=True, padding=True)
         with torch.no_grad():
             outputs = self.model(**inputs)
         embeddings = outputs.last_hidden_state
@@ -121,4 +121,4 @@ def generate_answer(video_id, question):
 
 
 
-    
+#print(generate_answer('Ec08db2hP10','What this song is about'))
