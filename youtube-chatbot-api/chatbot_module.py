@@ -20,7 +20,7 @@ import torch
 from langchain_core.embeddings import Embeddings
 
 class MiniLMembeddings(Embeddings):
-    def __init__(self, model_name="sentence-transformers/all-MiniLM-L6-v2"):
+    def __init__(self, model_name="sentence-transformers/paraphrase-MiniLM-L3-v2"):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         self.model = AutoModel.from_pretrained(model_name)
 
